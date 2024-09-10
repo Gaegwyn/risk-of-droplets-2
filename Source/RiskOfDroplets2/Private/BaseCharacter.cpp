@@ -58,9 +58,13 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		EnhancedInputComponent->BindAction(MovementInputAction, ETriggerEvent::Triggered, this, &ABaseCharacter::Move);
 		EnhancedInputComponent->BindAction(LookInputAction, ETriggerEvent::Triggered, this, &ABaseCharacter::Look);
-		// TODO: Jump Input
+		EnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Triggered, this, &ABaseCharacter::Jump);
 	}
+}
 
+void ABaseCharacter::Jump()
+{
+	Super::Jump();	// ACharacter already has Jump() fully implemented I guess
 }
 
 void ABaseCharacter::Move(const FInputActionValue& Value)
