@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{E0C89501-44A4-6A94-7541-B399A7780074}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "RiskOfDroplets2",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ModelingToolsEditorMode",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		}
+	]
+}
