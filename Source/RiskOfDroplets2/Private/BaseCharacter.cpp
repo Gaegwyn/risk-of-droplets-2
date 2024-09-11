@@ -91,10 +91,10 @@ void ABaseCharacter::Jump()
 
 void ABaseCharacter::Move(const FInputActionValue& Value)
 {
-	const FVector2D MovementVector = Value.Get<FVector2D>();
-
 	if (Controller != nullptr)
 	{
+		const FVector2D MovementVector = Value.Get<FVector2D>();
+
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
@@ -108,10 +108,9 @@ void ABaseCharacter::Move(const FInputActionValue& Value)
 
 void ABaseCharacter::Look(const FInputActionValue& Value)
 {
-	const FVector2D LookAxisVector = Value.Get<FVector2D>();
-
 	if (Controller != nullptr)
 	{
+		const FVector2D LookAxisVector = Value.Get<FVector2D>();
 		AddControllerPitchInput(LookAxisVector.Y);	//	Up/Down
 		AddControllerYawInput(LookAxisVector.X);	//	Left/Right
 	}
