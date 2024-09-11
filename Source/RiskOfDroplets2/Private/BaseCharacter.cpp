@@ -24,6 +24,9 @@ ABaseCharacter::ABaseCharacter()
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
+
+	WalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	SprintSpeed = WalkSpeed * 1.5f;
 }
 
 // Called when the game starts or when spawned
@@ -59,6 +62,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		EnhancedInputComponent->BindAction(MovementInputAction, ETriggerEvent::Triggered, this, &ABaseCharacter::Move);
 		EnhancedInputComponent->BindAction(LookInputAction, ETriggerEvent::Triggered, this, &ABaseCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Triggered, this, &ABaseCharacter::Jump);
+		EnhancedInputComponent->BindAction(SprintInputAction, ETriggerEvent::Triggered, this, &ABaseCharacter::StartSprint);
+		EnhancedInputComponent->BindAction(SprintInputAction, ETriggerEvent::Completed, this, &ABaseCharacter::StopSprint);
 	}
 }
 
@@ -84,4 +89,15 @@ void ABaseCharacter::Look(const FInputActionValue& Value)
 
 	AddControllerPitchInput(LookVector.Y);	//	Up/Down
 	AddControllerYawInput(LookVector.X);	//	Left/Right
+}
+
+void ABaseCharacter::StartSprint()
+{
+	// TODO: Do we need to Switch our animation blend?
+	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+}
+
+void ABaseCharacter::StopSprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }

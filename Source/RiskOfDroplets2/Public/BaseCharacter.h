@@ -31,8 +31,11 @@ public:
 	virtual void Jump() override;
 
 private:
+	// Locomotion
 	void Move(const struct FInputActionValue& Value);
 	void Look(const struct FInputActionValue& Value);
+	void StartSprint();
+	void StopSprint();
 
 
 private:
@@ -53,4 +56,13 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<class UInputAction> JumpInputAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<class UInputAction> SprintInputAction;
+
+	UPROPERTY(VisibleAnywhere, Category = "Stats")
+	float WalkSpeed;
+
+	UPROPERTY(EditAnywhere, Category = "Stats")
+	float SprintSpeed;
 };
