@@ -28,6 +28,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
+	bool IsSprinting() const;
+
 private:
 	// Locomotion
 	void Move(const struct FInputActionValue& Value);
@@ -63,4 +66,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float SprintSpeed;
+
+	/** Specify whether we're Sprinting or not */
+	UPROPERTY(VisibleAnywhere, Category = "Movement")
+	uint32 bIsSprinting:1;
 };

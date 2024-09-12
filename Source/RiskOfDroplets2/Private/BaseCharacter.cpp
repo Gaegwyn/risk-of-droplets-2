@@ -44,6 +44,7 @@ ABaseCharacter::ABaseCharacter()
 	// Keep track of Walk/Sprint speeds
 	WalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	SprintSpeed = WalkSpeed * 1.5f;
+	bIsSprinting = false;
 }
 
 // Called when the game starts or when spawned
@@ -91,6 +92,12 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	}
 }
 
+bool ABaseCharacter::IsSprinting() const
+{
+	return bIsSprinting;
+}
+
+
 void ABaseCharacter::Move(const FInputActionValue& Value)
 {
 	if (Controller != nullptr)
@@ -122,9 +129,11 @@ void ABaseCharacter::Sprint()
 {
 	// TODO: Do we need to Switch our animation blend?
 	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+	bIsSprinting = true;
 }
 
 void ABaseCharacter::StopSprinting()
 {
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	bIsSprinting = false;
 }
