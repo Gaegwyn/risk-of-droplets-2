@@ -7,7 +7,9 @@
 
 #include "BaseCharacter.generated.h"
 
-
+/**
+ *
+ */
 UCLASS()
 class RISKOFDROPLETS2_API ABaseCharacter : public ACharacter
 {
@@ -38,14 +40,11 @@ private:
 	void Sprint();
 	void StopSprinting();
 
-	// Skills
-	void UsePrimarySkill();
-	void UseSecondarySkill();
-	void UseUtilitySkill();
-	void UseSpecialSkill();
-
-	/* Huntress Specific Stuff */
-	void GetEnemiesInRange();
+	// Character skills that should be overwritten in child class
+	virtual void UsePrimarySkill();
+	virtual void UseSecondarySkill();
+	virtual void UseUtilitySkill();
+	virtual void UseSpecialSkill();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
