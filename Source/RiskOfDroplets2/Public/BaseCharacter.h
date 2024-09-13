@@ -38,6 +38,14 @@ private:
 	void Sprint();
 	void StopSprinting();
 
+	// Skills
+	void UsePrimarySkill();
+	void UseSecondarySkill();
+	void UseUtilitySkill();
+	void UseSpecialSkill();
+
+	/* Huntress Specific Stuff */
+	void GetEnemiesInRange();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -61,6 +69,18 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<class UInputAction> SprintInputAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<class UInputAction> PrimarySkillInputAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<class UInputAction> SecondarySkillInputAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<class UInputAction> UtilitySkillInputAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<class UInputAction> SpecialSkillInputAction;
+
 	UPROPERTY(VisibleAnywhere, Category = "Stats")
 	float WalkSpeed;
 
@@ -70,4 +90,20 @@ private:
 	/** Specify whether we're Sprinting or not */
 	UPROPERTY(VisibleAnywhere, Category = "Movement")
 	uint32 bIsSprinting:1;
+
+
+	/* Box Testing */
+public:
+	UPROPERTY(EditAnywhere, Category="Debugging")
+	float ExtentX = 500.0f;
+	UPROPERTY(EditAnywhere, Category = "Debugging")
+	float ExtentY = 250.0f;
+	UPROPERTY(EditAnywhere, Category = "Debugging")
+	float ExtentZ = 150.0f;
+	UPROPERTY(EditAnywhere, Category = "Debugging")
+	float BoxRange = 500.0f;
+	UPROPERTY(EditAnywhere, Category = "Debugging")
+	float CameraRotationScaler = 5.0f;
+	UPROPERTY(EditAnywhere, Category = "Debugging")
+	FVector Offset = FVector(0, 0, 250.0f);
 };
