@@ -3,7 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+
+
 #include "BaseProjectile.generated.h"
 
 UCLASS()
@@ -23,11 +27,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovementComponent; }
+	UBoxComponent* GetBoxCollision() const { return BoxCollisionComponent; }
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UStaticMeshComponent> StaticMeshComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UProjectileMovementComponent> ProjectileMovementComponent;
-		
+	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
+
+	/** The BoxComponent being used for movement collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBoxComponent> BoxCollisionComponent;
 };

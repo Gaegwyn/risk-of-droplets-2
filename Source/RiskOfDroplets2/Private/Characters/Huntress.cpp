@@ -4,7 +4,7 @@
 #include "Characters/Huntress.h"
 
 #include "BaseEnemy.h"
-#include "Projectiles/BaseProjectile.h"
+#include "Projectiles/StrafeProjectile.h"
 
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
@@ -55,9 +55,10 @@ void AHuntress::UseSecondarySkill()
 	UE_LOG(LogTemp, Log, TEXT("Using Huntress' Secondary Skill!"));
 
 	// TODO: Try spawning a 'projectile'
-	if (SecondarySkillProjectile)
+	if (SecondarySkillProjectile)	// TODO: Add some Cooldown
 	{
-		GetWorld()->SpawnActor<ABaseProjectile>(SecondarySkillProjectile, GetActorLocation(), GetActorRotation());
+		const TObjectPtr<AStrafeProjectile> StrafeProjectile = GetWorld()->SpawnActor<AStrafeProjectile>(SecondarySkillProjectile, GetActorLocation(), GetActorRotation());
+		StrafeProjectile.Get()->SetTarget(CurrentTarget);
 	}
 }
 

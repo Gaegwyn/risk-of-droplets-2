@@ -41,6 +41,6 @@ private:
 
 	// Skill projectile references
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class ABaseProjectile> SecondarySkillProjectile;
+	TSubclassOf<class AStrafeProjectile> SecondarySkillProjectile;
 	
 };
