@@ -5,6 +5,7 @@
 
 #include "BaseEnemy.h"
 #include "Projectiles/StrafeProjectile.h"
+#include "Projectiles/LaserGlaiveProjectile.h"
 
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
@@ -42,6 +43,13 @@ void AHuntress::UsePrimarySkill()
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("Using Huntress' Primary Skill!"));
+
+	if (PrimarySkillProjectile)	// TODO: Add some Cooldown
+	{
+		// TODO: Uncheck when needed
+		const TObjectPtr<AStrafeProjectile> StrafeProjectile = GetWorld()->SpawnActor<AStrafeProjectile>(PrimarySkillProjectile, GetActorLocation(), GetActorRotation());
+		StrafeProjectile.Get()->SetTarget(CurrentTarget);
+	}
 }
 
 void AHuntress::UseSecondarySkill()
@@ -57,8 +65,8 @@ void AHuntress::UseSecondarySkill()
 	// TODO: Try spawning a 'projectile'
 	if (SecondarySkillProjectile)	// TODO: Add some Cooldown
 	{
-		const TObjectPtr<AStrafeProjectile> StrafeProjectile = GetWorld()->SpawnActor<AStrafeProjectile>(SecondarySkillProjectile, GetActorLocation(), GetActorRotation());
-		StrafeProjectile.Get()->SetTarget(CurrentTarget);
+		const TObjectPtr<ALaserGlaiveProjectile> LaserGlaiveProjectile = GetWorld()->SpawnActor<ALaserGlaiveProjectile>(SecondarySkillProjectile, GetActorLocation(), GetActorRotation());
+		LaserGlaiveProjectile.Get()->SetTarget(CurrentTarget);
 	}
 }
 
@@ -137,29 +145,26 @@ void AHuntress::GetNearestTarget()
 			DrawDebugLine(GetWorld(), GetActorLocation(), ClosestEnemy->GetActorLocation(), FColor::Green, false, 1.0f, 0, 1.0f);
 		}
 		/* Debug BoxSweep*/
-		/* {
-			// Visualize the sphere sweep by drawing multiple spheres along the sweep path
-			const int32 NumSteps = 10;  // Number of debug spheres to draw
-			for (int32 i = 0; i <= NumSteps; i++)
-			{
-				// Calculate the position along the sweep path
-				float Alpha = (float)i / (float)NumSteps;
-				FVector DebugLocation = FMath::Lerp(PlayerLocation, EndLocation, Alpha);
-
-				DrawDebugBox(
-					GetWorld(),
-					DebugLocation,
-					FVector(ExtentX, ExtentY, ExtentZ),
-					CameraRotation.Quaternion(),
-					FColor::Green,		// Sphere color
-					false,				// Is Persistant
-					1.0f,				// Duration
-					0,					// Depth priority
-					1.0f				// Line thickness
-				);
-			}
-		}*/
-
+		//// Visualize the sphere sweep by drawing multiple spheres along the sweep path
+		//const int32 NumSteps = 10;  // Number of debug spheres to draw
+		//for (int32 i = 0; i <= NumSteps; i++)
+		//{
+		//	// Calculate the position along the sweep path
+		//	float Alpha = (float)i / (float)NumSteps;
+		//	FVector DebugLocation = FMath::Lerp(PlayerLocation, EndLocation, Alpha);
+		//
+		//	DrawDebugBox(
+		//		GetWorld(),
+		//		DebugLocation,
+		//		FVector(ExtentX, ExtentY, ExtentZ),
+		//		CameraRotation.Quaternion(),
+		//		FColor::Green,		// Sphere color
+		//		false,				// Is Persistant
+		//		1.0f,				// Duration
+		//		0,					// Depth priority
+		//		1.0f				// Line thickness
+		//	);
+		//}
 	}
 }
 
