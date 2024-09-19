@@ -33,7 +33,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// IDamageable functionality
+	UFUNCTION(BlueprintCallable)
 	virtual float GetMaxHealth() override;
+	UFUNCTION(BlueprintCallable)
 	virtual float GetCurrentHealth() override;
 	virtual void TakeDamage(const FDamageInfo& DamageInfo) override;
 	virtual void Heal(const float Value) override;
