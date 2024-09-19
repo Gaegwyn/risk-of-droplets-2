@@ -6,7 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-
+#include "Types/DamageInfo.h"
 
 #include "BaseProjectile.generated.h"
 
@@ -29,6 +29,9 @@ public:
 
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovementComponent; }
 	UBoxComponent* GetBoxCollision() const { return BoxCollisionComponent; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Damage)
+	FDamageInfo DamageInfo;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Component, meta = (AllowPrivateAccess = "true"))

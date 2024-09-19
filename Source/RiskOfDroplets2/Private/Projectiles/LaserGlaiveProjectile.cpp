@@ -12,6 +12,11 @@ ALaserGlaiveProjectile::ALaserGlaiveProjectile()
 	GetProjectileMovement()->ProjectileGravityScale = 0.0f;	// No gravity
 	GetProjectileMovement()->HomingAccelerationMagnitude = 5000.0f;	// Want this to bee-line toward next target
 
+	// Configure the base damage that is applied to targets
+	DamageInfo.Amount = 125.0f;
+	BounceDamageIncrease = 1.1f;
+
+	// Configure how many times we want this to bounce
 	MaxBounces = 6;
 	CurrBounces = 1;
 
@@ -32,9 +37,13 @@ void ALaserGlaiveProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComp,
 	if (Other->GetRootComponent() == GetProjectileMovement()->HomingTargetComponent)
 	{
 		// TODO: Apply Damage and whatever status effects to target
+		ABaseEnemy* Enemy = static_cast<ABaseEnemy*>(Other);
+		Enemy->TakeDamage(DamageInfo);
 		
-		// Update bounces
+		// Update bounces and increase base damage
 		++CurrBounces;
+		DamageInfo.Amount *= BounceDamageIncrease;
+
 		if (CurrBounces <= MaxBounces)
 		{
 			UE_LOG(LogTemp, Log, TEXT("Calculating next nearest target!!"));
@@ -42,7 +51,6 @@ void ALaserGlaiveProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComp,
 		}
 		else
 		{
-			// Set target to that
 			UE_LOG(LogTemp, Log, TEXT("Destroying Laser Glaive!!"));
 			Destroy();
 		}

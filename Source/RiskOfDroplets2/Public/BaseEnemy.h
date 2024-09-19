@@ -3,11 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Components/DamageSystemComponent.h"
 #include "GameFramework/Pawn.h"
+#include "Interfaces/Damageable.h"
+
 #include "BaseEnemy.generated.h"
 
 UCLASS()
-class RISKOFDROPLETS2_API ABaseEnemy : public APawn
+class RISKOFDROPLETS2_API ABaseEnemy : public APawn, public IDamageable
 {
 	GENERATED_BODY()
 
@@ -19,6 +23,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	class UDamageSystemComponent* GetDamageSystem() const { return DamageSystemComponent; }
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -26,13 +32,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// IDamageable functionality
+	virtual float GetMaxHealth() override;
+	virtual float GetCurrentHealth() override;
+	virtual void TakeDamage(const FDamageInfo& DamageInfo) override;
+	virtual void Heal(const float Value) override;
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Stats")
-	float MaxHealth;
-
-	UPROPERTY(VisibleAnywhere, Category = "Stats")
-	float CurrentHealth;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDamageSystemComponent> DamageSystemComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float Speed;

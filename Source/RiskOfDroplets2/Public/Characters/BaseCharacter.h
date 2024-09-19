@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Components/DamageSystemComponent.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/Damageable.h"
 
 #include "BaseCharacter.generated.h"
 
@@ -11,7 +14,7 @@
  *
  */
 UCLASS()
-class RISKOFDROPLETS2_API ABaseCharacter : public ACharacter
+class RISKOFDROPLETS2_API ABaseCharacter : public ACharacter, public IDamageable
 {
 	GENERATED_BODY()
 
@@ -22,6 +25,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	class UDamageSystemComponent* GetDamageSystem() const { return DamageSystemComponent; }
 
 public:	
 	// Called every frame
@@ -46,12 +51,22 @@ private:
 	virtual void UseUtilitySkill();
 	virtual void UseSpecialSkill();
 
+public:
+	// IDamageable functionality
+	virtual float GetMaxHealth() override;
+	virtual float GetCurrentHealth() override;
+	virtual void TakeDamage(const FDamageInfo& DamageInfo) override;
+	virtual void Heal(const float Value) override;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class USpringArmComponent> SpringArmComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UDamageSystemComponent> DamageSystemComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<class UInputMappingContext> InputMappingContext;

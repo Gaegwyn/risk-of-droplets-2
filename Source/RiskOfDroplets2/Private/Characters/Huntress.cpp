@@ -17,6 +17,10 @@ AHuntress::AHuntress()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it
 	PrimaryActorTick.bCanEverTick = false;
+
+	// Setup our damage system
+	GetDamageSystem()->MaxHealth = 250.0f;
+	GetDamageSystem()->CurrentHealth = GetDamageSystem()->MaxHealth;
 }
 
 void AHuntress::BeginPlay()
@@ -32,6 +36,7 @@ void AHuntress::BeginPlay()
 
 void AHuntress::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 }
 
 void AHuntress::UsePrimarySkill()

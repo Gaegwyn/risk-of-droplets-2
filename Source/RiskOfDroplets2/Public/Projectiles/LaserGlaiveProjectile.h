@@ -33,6 +33,10 @@ public:
 
 	void SetTarget(const class AActor* Target);
 
+	// Each time we bounce to another target we increase our damage delt by this
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Damage)
+	float BounceDamageIncrease;
+
 	UPROPERTY(EditAnywhere, Category = "Debugging")
 	float SphereRadius;
 

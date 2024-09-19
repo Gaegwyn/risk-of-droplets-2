@@ -40,6 +40,11 @@ ABaseCharacter::ABaseCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);	// Attach to end of the boom and let boom adjust to match controller orientation
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to spring arm (camera boom)
 
+	// Setup Damage System component
+	DamageSystemComponent = CreateDefaultSubobject<UDamageSystemComponent>(TEXT("DamageSystem"));
+	DamageSystemComponent->MaxHealth = 100.0f;
+	DamageSystemComponent->CurrentHealth = DamageSystemComponent->MaxHealth;
+
 	// Keep track of Walk/Sprint speeds
 	WalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	SprintSpeed = WalkSpeed * 1.5f;
@@ -121,11 +126,31 @@ void ABaseCharacter::UseSpecialSkill()
 	//UE_LOG(LogTemp, Log, TEXT("Using BaseCharacter's Special Skill!"))
 }
 
+float ABaseCharacter::GetMaxHealth()
+{
+	return DamageSystemComponent->GetMaxHealth();
+}
+
+float ABaseCharacter::GetCurrentHealth()
+{
+	return DamageSystemComponent->GetCurrentHealth();
+}
+
+void ABaseCharacter::TakeDamage(const FDamageInfo& DamageInfo)
+{
+	DamageSystemComponent->TakeDamage(DamageInfo);
+	// TODO: Check for player death if CurrentHealth <= 0
+}
+
+void ABaseCharacter::Heal(const float Value)
+{
+	DamageSystemComponent->Heal(Value);
+}
+
 bool ABaseCharacter::IsSprinting() const
 {
 	return bIsSprinting;
 }
-
 
 void ABaseCharacter::Move(const FInputActionValue& Value)
 {

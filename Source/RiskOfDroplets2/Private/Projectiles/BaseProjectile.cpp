@@ -21,6 +21,10 @@ ABaseProjectile::ABaseProjectile()
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 	GetProjectileMovement()->InitialSpeed = 100.0f;
 	GetProjectileMovement()->MaxSpeed = 500.0f;
+
+	// Configure default damage information that is applied to targets
+	DamageInfo.Amount = 100.0f;
+	DamageInfo.DamageType = EDamageType::Projectile;
 }
 
 // Called when the game starts or when spawned

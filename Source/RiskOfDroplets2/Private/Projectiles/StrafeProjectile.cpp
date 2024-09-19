@@ -8,6 +8,8 @@ AStrafeProjectile::AStrafeProjectile()
 	GetProjectileMovement()->bIsHomingProjectile = true;
 	GetProjectileMovement()->ProjectileGravityScale = 0.0f;	// No gravity
 	GetProjectileMovement()->HomingAccelerationMagnitude = 500.0f;
+
+	DamageInfo.Amount = 100.0f;
 }
 
 void AStrafeProjectile::BeginPlay()
