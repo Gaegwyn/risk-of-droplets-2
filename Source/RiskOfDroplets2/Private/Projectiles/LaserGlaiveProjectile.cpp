@@ -36,7 +36,7 @@ void ALaserGlaiveProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComp,
 	// Only interact with our target
 	if (Other->GetRootComponent() == GetProjectileMovement()->HomingTargetComponent)
 	{
-		// TODO: Apply Damage and whatever status effects to target
+		// Apply Damage and whatever status effects to target
 		ABaseEnemy* Enemy = static_cast<ABaseEnemy*>(Other);
 		Enemy->TakeDamage(DamageInfo);
 		

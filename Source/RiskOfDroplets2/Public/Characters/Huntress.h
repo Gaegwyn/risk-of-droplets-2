@@ -28,6 +28,7 @@ public:
 
 private:
 	// Skills
+	// TODO: Cooldowns
 	virtual void UsePrimarySkill() override;
 	virtual void UseSecondarySkill() override;
 	virtual void UseUtilitySkill() override;
@@ -35,6 +36,11 @@ private:
 
 	// Auto-targeting for primary and secondary skills
 	void GetNearestTarget();
+
+	// Teleport a distance in the direction of the player's camera
+	void StartBlink();
+	void BlinkTick();
+	void OnBlinkEnd();
 
 	// Keep track of what our target is
 	TObjectPtr<AActor> CurrentTarget;
@@ -46,5 +52,19 @@ private:
 	// Skill projectile references
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ALaserGlaiveProjectile> SecondarySkillProjectile;
+
+
+	// Blink Skill params
+	FTimerHandle BlinkTimerHandle;
+
+	FVector BlinkStartLocation;
+	FVector BlinkTargetLocation;
+
+	UPROPERTY(EditAnywhere)
+	float BlinkDistance;
+
+	float BlinkTimePassed;
+
+	float BlinkDuration;	// Total time for blink to execute
 	
 };

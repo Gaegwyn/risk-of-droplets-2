@@ -4,9 +4,9 @@
 #include "Characters/Huntress.h"
 
 #include "BaseEnemy.h"
+#include "GameFramework/CharacterMovementComponent.h" 
 #include "Projectiles/StrafeProjectile.h"
 #include "Projectiles/LaserGlaiveProjectile.h"
-
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
@@ -21,17 +21,18 @@ AHuntress::AHuntress()
 	// Setup our damage system
 	GetDamageSystem()->MaxHealth = 250.0f;
 	GetDamageSystem()->CurrentHealth = GetDamageSystem()->MaxHealth;
+
+	BlinkDistance = 1500.0f;
+	BlinkDuration = 0.2f;
 }
 
 void AHuntress::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Inside your class
-	FTimerHandle TimerHandle;
-
 	// Ensure the function repeats every 'Interval' seconds
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AHuntress::GetNearestTarget, 0.5f, true);	// TODO: Handle stopping timer?
+	FTimerHandle TargetingTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TargetingTimerHandle, this, &AHuntress::GetNearestTarget, 0.5f, true);	// TODO: Handle stopping timer?
 }
 
 void AHuntress::Tick(float DeltaTime)
@@ -78,6 +79,7 @@ void AHuntress::UseSecondarySkill()
 void AHuntress::UseUtilitySkill()
 {
 	UE_LOG(LogTemp, Log, TEXT("Using Huntress' Utility Skill!"));
+	StartBlink();
 }
 
 void AHuntress::UseSpecialSkill()
@@ -94,7 +96,7 @@ void AHuntress::GetNearestTarget()
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PlayerController)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Calculating nearest enemy!"));
+		//UE_LOG(LogTemp, Log, TEXT("Calculating nearest enemy!"));
 
 		TArray<APawn*> EnemiesInRange;
 
@@ -173,6 +175,59 @@ void AHuntress::GetNearestTarget()
 	}
 }
 
+void AHuntress::StartBlink()
+{
+	// Think it's like a half-second lerp from starting position to new position (Camera forward)
+	// 1. Huntress also becomes invisible as she "teleports"
+	// 2. Might be invuln during time?
+	// 3. DOESN'T phase through things but slides across surfaces
+	// 4. Resets velocity at end I think
 
+	// Get the player controller and the camera manager
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)	// TODO: If can Blink
+	{
+		// Get Player's location
+		FVector CameraLocation;
+		FRotator CameraRotation;
+		PlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
 
+		// Initialize our blink
+		BlinkStartLocation = GetActorLocation();
+		BlinkTargetLocation = GetActorLocation() + (CameraRotation.Vector() * BlinkDistance);
+		BlinkTimePassed = 0.0f;
+		GetWorld()->GetTimerManager().SetTimer(BlinkTimerHandle, this, &AHuntress::BlinkTick, GetWorld()->GetDeltaSeconds(), true);
+	}
+}
 
+void AHuntress::BlinkTick()
+{
+	UE_LOG(LogTemp, Log, TEXT("Blinking!"));
+	BlinkTimePassed += GetWorld()->GetDeltaSeconds();
+
+	const float Progress = FMath::Clamp(BlinkTimePassed / BlinkDuration, 0.0f, 1.0f);
+	const FVector NewLocation = FMath::Lerp(BlinkStartLocation, BlinkTargetLocation, Progress);
+
+	bool bHit = SetActorLocation(NewLocation, true);
+	if (bHit)
+	{
+		// TODO: Have Huntress "Slide" across terrain smoothly. Will need to calc new target destination and use the Hit.Normals I guess?
+	}
+
+	if (Progress >= 1.0f)
+	{
+		OnBlinkEnd();
+	}
+}
+
+void AHuntress::OnBlinkEnd()
+{
+	UE_LOG(LogTemp, Log, TEXT("Finished blinking"));
+	// TODO: IsNot Blinking, continue movement, etc.
+	GetWorld()->GetTimerManager().ClearTimer(BlinkTimerHandle);
+
+	if (GetCharacterMovement()->IsFalling())
+	{
+		GetCharacterMovement()->Velocity = FVector::ZeroVector;
+	}
+}

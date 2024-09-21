@@ -3,6 +3,8 @@
 
 #include "Projectiles/StrafeProjectile.h"
 
+#include "BaseEnemy.h"
+
 AStrafeProjectile::AStrafeProjectile()
 {
 	GetProjectileMovement()->bIsHomingProjectile = true;
@@ -25,6 +27,9 @@ void AStrafeProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AAct
 	{
 		// TODO: Apply Damage and whatever status effects to target
 		UE_LOG(LogTemp, Log, TEXT("SUCCESS: Collided with Target!!"));
+
+		ABaseEnemy* Enemy = static_cast<ABaseEnemy*>(Other);
+		Enemy->TakeDamage(DamageInfo);
 		Destroy();
 	}
 	else
