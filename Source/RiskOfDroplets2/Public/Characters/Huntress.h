@@ -53,7 +53,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ALaserGlaiveProjectile> SecondarySkillProjectile;
 
-
 	// Blink Skill params
 	FTimerHandle BlinkTimerHandle;
 
@@ -62,9 +61,10 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float BlinkDistance;
-
 	float BlinkTimePassed;
-
 	float BlinkDuration;	// Total time for blink to execute
+
+	UPROPERTY(EditAnywhere)
+	float AutoAimDistance;
 	
 };

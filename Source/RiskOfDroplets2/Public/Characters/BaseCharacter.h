@@ -38,6 +38,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsSprinting() const;
 
+	// TODO: Consider tracking time remaining for UI (GetWorld()->GetTimerManager().GetTimerRemaining)
+	UFUNCTION(BlueprintCallable)
+	void ResetPrimarySkillCooldown();
+	UFUNCTION(BlueprintCallable)
+	void ResetSecondarySkillCooldown();
+	UFUNCTION(BlueprintCallable)
+	void ResetUtilitySkillCooldown();
+	UFUNCTION(BlueprintCallable)
+	void ResetSpecialSkillCooldown();
+
 private:
 	// Locomotion
 	void Move(const struct FInputActionValue& Value);
@@ -120,4 +130,22 @@ public:
 	float CameraRotationScaler = 5.0f;
 	UPROPERTY(EditAnywhere, Category = "Debugging")
 	FVector Offset = FVector(0, 0, 250.0f);
+
+protected:
+	// Skill timers
+	FTimerHandle PrimarySkillTimerHandle;
+	float PrimarySkillCooldown;
+	bool bCanUsePrimarySkill;
+
+	FTimerHandle SecondarySkillTimerHandle;
+	float SecondarySkillCooldown;
+	bool bCanUseSecondarySkill;
+
+	FTimerHandle UtilitySkillTimerHandle;
+	float UtilitySkillCooldown;
+	bool bCanUseUtilitySkill;
+
+	FTimerHandle SpecialSkillTimerHandle;
+	float SpecialSkillCooldown;
+	bool bCanUseSpecialSkill;
 };

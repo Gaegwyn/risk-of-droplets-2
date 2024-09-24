@@ -147,6 +147,26 @@ void ABaseCharacter::Heal(const float Value)
 	DamageSystemComponent->Heal(Value);
 }
 
+void ABaseCharacter::ResetPrimarySkillCooldown()
+{
+	bCanUsePrimarySkill = true;
+}
+
+void ABaseCharacter::ResetSecondarySkillCooldown()
+{
+	bCanUseSecondarySkill = true;
+}
+
+void ABaseCharacter::ResetUtilitySkillCooldown()
+{
+	bCanUseUtilitySkill = true;
+}
+
+void ABaseCharacter::ResetSpecialSkillCooldown()
+{
+	bCanUseSpecialSkill = true;
+}
+
 bool ABaseCharacter::IsSprinting() const
 {
 	return bIsSprinting;

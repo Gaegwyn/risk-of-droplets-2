@@ -24,13 +24,28 @@ AHuntress::AHuntress()
 
 	BlinkDistance = 1500.0f;
 	BlinkDuration = 0.2f;
+
+	// Can use abilities
+	bCanUsePrimarySkill = true;
+	bCanUseSecondarySkill = true;
+	bCanUseUtilitySkill = true;
+	bCanUseSpecialSkill = true;
+
+	// Cooldowns
+	PrimarySkillCooldown = 0.5f;
+	SecondarySkillCooldown = 7.0f;
+	UtilitySkillCooldown = 7.0f;
+	SpecialSkillCooldown = 12.0f;
+
+	// How far away we can still target enemies
+	AutoAimDistance = 1200.0f;
 }
 
 void AHuntress::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Ensure the function repeats every 'Interval' seconds
+	// Set a repeating timer for our auto-targeting
 	FTimerHandle TargetingTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TargetingTimerHandle, this, &AHuntress::GetNearestTarget, 0.5f, true);	// TODO: Handle stopping timer?
 }
@@ -47,14 +62,23 @@ void AHuntress::UsePrimarySkill()
 		UE_LOG(LogTemp, Log, TEXT("No target available!"));
 		return;
 	}
+	if (!bCanUsePrimarySkill)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Primary skill on cooldown!"));
+		return;
+	}
 
 	UE_LOG(LogTemp, Log, TEXT("Using Huntress' Primary Skill!"));
 
-	if (PrimarySkillProjectile)	// TODO: Add some Cooldown
+	if (PrimarySkillProjectile)
 	{
-		// TODO: Uncheck when needed
 		const TObjectPtr<AStrafeProjectile> StrafeProjectile = GetWorld()->SpawnActor<AStrafeProjectile>(PrimarySkillProjectile, GetActorLocation(), GetActorRotation());
 		StrafeProjectile.Get()->SetTarget(CurrentTarget);
+
+		// Go on cooldown 
+		// TODO: Allow attack speed to increase cooldown?
+		bCanUsePrimarySkill = false;
+		GetWorld()->GetTimerManager().SetTimer(PrimarySkillTimerHandle, this, &ABaseCharacter::ResetPrimarySkillCooldown, PrimarySkillCooldown, true);
 	}
 }
 
@@ -65,26 +89,51 @@ void AHuntress::UseSecondarySkill()
 		UE_LOG(LogTemp, Log, TEXT("No target available!"));
 		return;
 	}
+	if (!bCanUseSecondarySkill)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Secondary skill on cooldown!"));
+		return;
+	}
 
 	UE_LOG(LogTemp, Log, TEXT("Using Huntress' Secondary Skill!"));
 
-	// TODO: Try spawning a 'projectile'
-	if (SecondarySkillProjectile)	// TODO: Add some Cooldown
+	if (SecondarySkillProjectile)
 	{
 		const TObjectPtr<ALaserGlaiveProjectile> LaserGlaiveProjectile = GetWorld()->SpawnActor<ALaserGlaiveProjectile>(SecondarySkillProjectile, GetActorLocation(), GetActorRotation());
 		LaserGlaiveProjectile.Get()->SetTarget(CurrentTarget);
+
+		// Go on cooldown 
+		// TODO: Allow attack speed to increase cooldown?
+		bCanUseSecondarySkill = false;
+		GetWorld()->GetTimerManager().SetTimer(SecondarySkillTimerHandle, this, &ABaseCharacter::ResetSecondarySkillCooldown, SecondarySkillCooldown, true);
 	}
 }
 
 void AHuntress::UseUtilitySkill()
 {
+	if (!bCanUseUtilitySkill)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Utility skill on cooldown!"));
+		return;
+	}
+
 	UE_LOG(LogTemp, Log, TEXT("Using Huntress' Utility Skill!"));
+	bCanUseUtilitySkill = false;
 	StartBlink();
 }
 
 void AHuntress::UseSpecialSkill()
 {
+	if (!bCanUseSpecialSkill)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Special skill on cooldown!"));
+		return;
+	}
+
 	UE_LOG(LogTemp, Log, TEXT("Using Huntress' Special Skill!"));
+
+	bCanUseSpecialSkill = false;
+	GetWorld()->GetTimerManager().SetTimer(SpecialSkillTimerHandle, this, &ABaseCharacter::ResetSpecialSkillCooldown, SpecialSkillCooldown, true);
 }
 
 void AHuntress::GetNearestTarget()
@@ -105,9 +154,9 @@ void AHuntress::GetNearestTarget()
 		FRotator CameraRotation;
 		PlayerController->GetPlayerViewPoint(CameraLocation, CameraRotation);
 
-		// Define the end point of the sphere sweep (for a small vertical Z offset)
+		// Define the end point of the box sweep
 		FVector PlayerLocation = GetActorLocation() + (CameraRotation.Vector() * CameraRotationScaler) + Offset;
-		FVector EndLocation = PlayerLocation + (CameraRotation.Vector() * 350.0f);
+		FVector EndLocation = PlayerLocation + (CameraRotation.Vector() * AutoAimDistance);
 
 		TArray<FHitResult> HitResults;
 		FCollisionShape Box = FCollisionShape::MakeBox(FVector(ExtentX, ExtentY, ExtentZ));
@@ -230,4 +279,7 @@ void AHuntress::OnBlinkEnd()
 	{
 		GetCharacterMovement()->Velocity = FVector::ZeroVector;
 	}
+
+	// Go on cooldown
+	GetWorld()->GetTimerManager().SetTimer(UtilitySkillTimerHandle, this, &ABaseCharacter::ResetUtilitySkillCooldown, UtilitySkillCooldown, true);
 }
