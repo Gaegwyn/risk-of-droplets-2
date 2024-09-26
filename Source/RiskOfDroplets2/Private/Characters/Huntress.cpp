@@ -57,14 +57,14 @@ void AHuntress::Tick(float DeltaTime)
 
 void AHuntress::UsePrimarySkill()
 {
-	if (!CurrentTarget.Get())
-	{
-		UE_LOG(LogTemp, Log, TEXT("No target available!"));
-		return;
-	}
 	if (!bCanUsePrimarySkill)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Primary skill on cooldown!"));
+		return;
+	}
+	if (!CurrentTarget.Get())
+	{
+		UE_LOG(LogTemp, Log, TEXT("No target available!"));
 		return;
 	}
 
@@ -84,14 +84,14 @@ void AHuntress::UsePrimarySkill()
 
 void AHuntress::UseSecondarySkill()
 {
-	if (!CurrentTarget.Get())
-	{
-		UE_LOG(LogTemp, Log, TEXT("No target available!"));
-		return;
-	}
 	if (!bCanUseSecondarySkill)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Secondary skill on cooldown!"));
+		return;
+	}
+	if (!CurrentTarget.Get())
+	{
+		UE_LOG(LogTemp, Log, TEXT("No target available!"));
 		return;
 	}
 

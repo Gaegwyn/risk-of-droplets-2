@@ -28,7 +28,6 @@ public:
 
 private:
 	// Skills
-	// TODO: Cooldowns
 	virtual void UsePrimarySkill() override;
 	virtual void UseSecondarySkill() override;
 	virtual void UseUtilitySkill() override;
